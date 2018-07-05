@@ -1,1 +1,9 @@
+<h1><%= @user.username %></h1>
 
+<label>Posts commented on:</label>
+<ul>
+  <% @user.posts.each do |post| %>
+    <label><%= link_to post.title, post %></label>
+    <li><%= post.content %></li>
+  <% end %>
+</ul>

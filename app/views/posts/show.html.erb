@@ -1,1 +1,41 @@
+<h1><%= @post.title %></h1>
+<p><%= @post.content %></p>
 
+<label>Categories:</label>
+<ul>
+  <% @post.categories.each do |cat| %>
+    <li><%= cat.name %></li>
+  <% end %>
+</ul>
+
+<label>Users who have commented:</label>
+<ul>
+  <% @unique_users.each do |user| %>
+    <li><%= link_to user.username, user %></li>
+  <% end %>
+</ul>
+
+<label>Comments:</label>
+<ul>
+  <% @comments.each do |comment| %>
+    <li><%= comment.user.username %> says: <%= comment.content %></li>
+  <% end %>
+</ul>
+
+<label>New Comment:</label>
+<%= form_tag '/comments', method: 'post' do %>
+  <%= text_field_tag :'comment[content]' %>
+
+  <%= label_tag :user %>
+  <%= select_tag :'comment[user_id]', options_for_select(@users.map { |u| [u.username, u.id] })%>
+
+  <%= fields_for :user do |u| %>
+    <%= label_tag :username, "Username" %>
+    <%= text_field_tag :username, nil, id: "comment_user_attributes_username" %>
+    <%= label_tag :email %>
+    <%= text_field_tag :email %>
+  <% end %>
+
+  <%= hidden_field_tag :'comment[post_id]', @post.id %>
+  <%= submit_tag "Create Comment" %>
+<% end %>
